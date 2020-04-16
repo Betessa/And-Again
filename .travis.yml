@@ -1,7 +1,6 @@
 # Set language
 language: php
 
-# Set php versions we can work with
 php:
   - 5.6
 
