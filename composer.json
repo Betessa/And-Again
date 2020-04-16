@@ -1,4 +1,0 @@
-{  "require-dev": {
-        "php-coveralls/php-coveralls": "^2.2",
-        "phpunit/phpcov": "^2.0"
-    },}
