@@ -1,6 +1,8 @@
-repo_token:  65d34486f9ee6109c43e64af7b14c8b30065b106n # should be kept secret!
-service_name: travis-ci # travis-ci or travis-pro
-
-# for php-coveralls
+# Set folder to clover (must be the same on travis)
 coverage_clover: build/logs/clover.xml
+# Same folder here
 json_path: build/logs/coveralls-upload.json
+# Don't touch that
+service_name: travis-ci
+
+# This needs a travis file: https://gist.github.com/khaosdoctor/5f6989c4fc27ecc03955
