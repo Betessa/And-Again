@@ -1,3 +1,6 @@
-coverage_clover: tests/logs/clover.xml
-json_path: tests/logs/coveralls-upload.json
-service_name: travis-ci
+repo_token:  65d34486f9ee6109c43e64af7b14c8b30065b106n # should be kept secret!
+service_name: travis-ci # travis-ci or travis-pro
+
+# for php-coveralls
+coverage_clover: build/logs/clover.xml
+json_path: build/logs/coveralls-upload.json
