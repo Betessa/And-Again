@@ -1,0 +1,3 @@
+#!bin/bash
+
+./moss.pl -l cc *.cpp
