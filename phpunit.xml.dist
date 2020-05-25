@@ -3,7 +3,7 @@
 <phpunit bootstrap="vendor/autoload.php"
           colors="true"
           verbose="true"
-          stepOnFailure="true"
+          stopOnFailure="true"
          >
     <testsuites>
         <testsuite name="Example">
