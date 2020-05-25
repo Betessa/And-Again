@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./moss.pl -l cc -d ./Submissions/*assignsubmission_file_/*.cpp
+./moss.pl -l $1 -d ./Submissions/*assignsubmission_file_/*.cpp
