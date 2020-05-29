@@ -24,15 +24,13 @@
 
 		//chdir('Moss');//ensures that code is done in specific directory of server
 		if ($base) {
-			$output = shell_exec("./sendbashbase.sh '".$lang."'");// THis executes our bash code that communicates with moss with a base file
+			$mossSite = shell_exec("./sendbashbase.sh '".$lang."'");// THis executes our bash code that communicates with moss with a base file
 		}else{
-			$output = shell_exec("./sendbash.sh '".$lang."'");// This executes our bash code that comunicates with moss without a base file
+			$mossSite = shell_exec("./sendbash.sh '".$lang."'");// This executes our bash code that comunicates with moss without a base file
 		}
 		chdir($old_path);
-		$arr = explode("\n", $output);
-		$mossSite=$arr[count($arr)-2];
 		return $mossSite;
 	}
 	
-	echo  SendtoMoss(0,true);	
+	echo  SendtoMoss(0,false);	
 ?>

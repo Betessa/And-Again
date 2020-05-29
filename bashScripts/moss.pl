@@ -255,7 +255,7 @@ while (@ARGV && ($_ = $ARGV[0]) =~ /^-(.)(.*)/) {
 #
 # Make sure all the argument files exist and are readable.
 #
-print "Checking files . . . \n";
+#print "Checking files . . . \n";
 $i = 0;
 while($i < $bindex)
 {
@@ -274,7 +274,7 @@ foreach $file (@ARGV)
 if ("@ARGV" eq '') {
     die "No files submitted.\n $usage";
 }
-print "OK\n";
+#print "OK\n";
 
 #
 # Now the real processing begins.
@@ -307,7 +307,7 @@ sub upload_file {
     }
     close(F);
 
-    print "Uploading $file ...";
+    	# print "Uploading $file ...";
     open(F,$file);
     $file =~s/\s/\_/g;    # replace blanks in filename with underscores
     print $sock "file $id $lang $size $file\n";
@@ -315,7 +315,7 @@ sub upload_file {
         print $sock $_;
     }
     close(F);
-    print "done.\n";
+    	#print "done.\n";
 }
 
 
@@ -349,7 +349,7 @@ foreach $file (@ARGV) {
 }
 
 print $sock "query 0 $opt_c\n";
-print "Query submitted.  Waiting for the server's response.\n";
+#print "Query submitted.  Waiting for the server's response.\n";
 &read_from_server();
 print $sock "end\n";
 close($sock);
