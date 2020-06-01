@@ -7,7 +7,7 @@
          >
     <testsuites>
         <testsuite name="Example">
-            <file>.*.php</file>
+            <file>*.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
