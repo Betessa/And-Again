@@ -7,6 +7,6 @@
         {
             $result = Example\Example::go();
         }
-         
+    }    
         
 ?>  
