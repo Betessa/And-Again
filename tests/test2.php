@@ -1,5 +1,5 @@
 <?php
-require __DIR__ .'/../vendor/bin/phpunit';
+require __DIR__ .'/../vendor/bin/tests/test2.php;
 
 function testSend()
 {
