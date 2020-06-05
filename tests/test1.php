@@ -1,8 +1,14 @@
 <?php
-    require __DIR__ .'/../vendor/bin/tests/test1.php';
+    require __DIR__ .'/../vendor/autoload.php';
 
-    mossSite= $arr[count($arr)-2];
-    funcion mossSite($condition){
-    print($condition ? 'pass' : 'fail') . '<br>';
+    class Test extends PHPUnit_Framework_TestCase
+    {
+        public function testSend()
+        {
+            if(strcmp(substr(Send::SendtoMoss(0), 1, 4), "http")){
+                
+            $result = true;
+            }
+        }
     }
 ?>  
