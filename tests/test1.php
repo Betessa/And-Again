@@ -5,11 +5,12 @@
     {
         public function testSend()
         {
-            if(strcmp(substr(Send::SendtoMoss(0), 1, 4), "http")){
-                
-            $result = true;
-            }else{
+            if (strcmp(substr(Send::SendtoMoss(0), 1, 4), "http")) {
+
+                $result = true;
+            } else {
                 $result = false;
+            }
         }
     }
 ?>  
