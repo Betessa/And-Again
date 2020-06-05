@@ -1,5 +1,5 @@
 <?php
-    require __DIR__ .'/../vendor/autoload.php';
+    require __DIR__ .'bashScripts/Send.php';
 
     class Test extends PHPUnit_Framework_TestCase
     {
