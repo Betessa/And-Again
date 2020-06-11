@@ -1,8 +1,24 @@
 <?php
-    require __DIR__ .'/../vendor/bin/tests/test1.php';
+use PHPUnit\Framework\TestCase;
+use function PHPUnit\Framework\assertEquals;
+require __DIR__ .'/../bashScripts/Send.php';
 
-    mossSite= $arr[count($arr)-2];
-    funcion mossSite($condition){
-    print($condition ? 'pass' : 'fail') . '<br>';
+    class test1Test extends PHPUnit_Framework_TestCase
+    {
+        public function testBruh() {
+            $this -> assertEquals(True, True);
+        }
+        public function testSend()
+        {
+
+            if (strcmp(substr(SendtoMoss(0), 0, 4), "http")) {
+
+                $result = true;
+            } else {
+                $result = false;
+            }
+            $this -> result
+        }
+
     }
 ?>  
