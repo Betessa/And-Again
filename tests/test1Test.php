@@ -8,17 +8,6 @@ require __DIR__ .'/../bashScripts/Send.php';
         public function testBruh() {
             $this -> assertEquals(True, True);
         }
-        public function testSend()
-        {
-
-            if (strcmp(substr(SendtoMoss(0), 0, 4), "http")) {
-
-                $result = true;
-            } else {
-                $result = false;
-            }
-            $this -> assertEquals(True, $result);
-        }
-
+       
     }
 ?>  
