@@ -17,7 +17,7 @@ require __DIR__ .'/../bashScripts/Send.php';
             } else {
                 $result = false;
             }
-            $this -> result
+            $this -> assertEquals(True, $result);
         }
 
     }
