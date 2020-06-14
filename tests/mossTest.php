@@ -104,16 +104,6 @@ require __DIR__ ."/ToTest.php";
             $read= $moss->send();
             $this->assertNotEmpty($read);
         }
-        public function testAddFile(){
-            $moss = new MOSS(370143826);
-            $value = $moss->addFile("ToTest.php");
-            $this->assertTrue($value);
-        }
-        public function testAddBase(){
-            $moss = new MOSS(370143826);
-            $value = $moss->addBaseFile("ToTest.php");
-            $this->assertTrue($value);
-        }
         public function testFiles(){
             $moss = new MOSS(370143826);
             $moss->addByWildcard("./ToTest.php");
