@@ -98,5 +98,10 @@ require __DIR__ ."../../moss/moss.php";
             $moss = new MOSS(370143826);
             $value= $moss->setExperimentalServer("This isn't a boolean");
         }
+        public function testSend(){
+            $moss = new MOSS(370143826);
+            $read= $moss->send();
+            $this->assertNotEmpty($read);
+        }
     }
 ?>  
