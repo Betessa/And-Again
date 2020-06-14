@@ -106,7 +106,8 @@ require __DIR__ ."/ToTest.php";
         }
         public function testFiles(){
             $moss = new MOSS(370143826);
-            $moss->addByWildcard("./ToTest.php");
+
+            $this->assertNull($moss->addByWildcard("./ToTest.php"));
         }
     }
 ?>  
