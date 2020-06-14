@@ -80,7 +80,23 @@ require __DIR__ ."../../moss/moss.php";
             $this->setExpectedException("Exception",[],7);
             $moss = new MOSS(370143826);
             $value = $moss->addFile("This is not a file");
-        }   
+        }
+
+        public function testSetComment(){
+            $moss = new MOSS(370143826);
+            $value = $moss->setCommentString("Hello");
+            $this->assertTrue($value);
+        }
+
+        public function testExperimentalServer(){
+            $moss = new MOSS(370143826);
+            $value = $moss->setExperimentalServer(True);
+            $this->assertTrue($value);
+        }
+        public function testExperimentalServerWrong(){
+            $this->setExpectedException("Exception",[],6);
+            $moss = new MOSS(370143826);
+            $value= $moss->setExperimentalServer("This isn't a boolean");
+        }
     }
 ?>  
-
