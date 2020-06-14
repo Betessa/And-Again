@@ -68,7 +68,7 @@ pl * plagiarism.php - allows the admin to configure plagiarism stuff
                 }
             }
         }
-        notify(get_string('savedconfigsuccess', 'plagiarism_moss'), 'notifysuccess');
+
     }
     $plagiarismsettings = (array)get_config('plagiarism');
     $mform->set_data($plagiarismsettings);
