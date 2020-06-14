@@ -76,7 +76,7 @@ require __DIR__ ."../../moss/moss.php";
             $value = $moss->setResultLimit("This is not an int");
         }
 
-        public function testAddFile(){
+        public function testAddFileWrong(){
             $this->setExpectedException("Exception",[],7);
             $moss = new MOSS(370143826);
             $value = $moss->addFile("This is not a file");
@@ -100,8 +100,19 @@ require __DIR__ ."../../moss/moss.php";
         }
         public function testSend(){
             $moss = new MOSS(370143826);
+            $value = $moss->addFile("ToTest.php");
             $read= $moss->send();
             $this->assertNotEmpty($read);
+        }
+        public function testAddFile(){
+            $moss = new MOSS(370143826);
+            $value = $moss->addFile("ToTest.php");
+            $this->assertTrue($value);
+        }
+        public function testAddBase(){
+            $moss = new MOSS(370143826);
+            $value = $moss->addBaseFileFile("ToTest.php");
+            $this->assertTrue($value);
         }
     }
 ?>  
