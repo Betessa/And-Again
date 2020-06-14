@@ -110,7 +110,7 @@ require __DIR__ ."../../moss/moss.php";
         }
         public function testAddBase(){
             $moss = new MOSS(370143826);
-            $value = $moss->addBaseFileFile("ToTest.php");
+            $value = $moss->addBaseFile("ToTest.php");
             $this->assertTrue($value);
         }
     }
