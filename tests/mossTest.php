@@ -100,7 +100,6 @@ require __DIR__ ."../../moss/moss.php";
         }
         public function testSend(){
             $moss = new MOSS(370143826);
-            $value = $moss->addFile("ToTest.php");
             $read= $moss->send();
             $this->assertNotEmpty($read);
         }
