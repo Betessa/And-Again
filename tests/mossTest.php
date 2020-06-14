@@ -2,6 +2,7 @@
 use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertEquals;
 require __DIR__ ."../../moss/moss.php";
+require __DIR__ ."/ToTest.php";
 
     class mossTest extends PHPUnit_Framework_TestCase
     {
