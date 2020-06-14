@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="plagiarism/moss/db" VERSION="20200609" COMMENT="XMLDB file for Moodle plagiarism/programming"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="plagiarism_moss" COMMENT="This table saves settings for source code plagiarism detection in programming assignments">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course module id"/>
+        <FIELD NAME="duedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The date submissions are scanned"/>
+        <FIELD NAME="language" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Which language is used in the assignment"/>
+        <FIELD NAME="notification_text" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="the customised notification text to appear on the student assignment page"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="cmid_index" UNIQUE="false" FIELDS="cmid" COMMENT="Index for cmid for fast searching"/>
+      </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="plagiarism_moss_result" COMMENT="store the result of the scanning, each record contains a pair">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="student1_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="student2_id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="similarity1" TYPE="number" LENGTH="5" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="similarity rate of student id 1"/>
+        <FIELD NAME="similarity2" TYPE="number" LENGTH="5" NOTNULL="false" SEQUENCE="false" DECIMALS="2" COMMENT="similarity rate of student id 2"/>
+        <FIELD NAME="resultlink" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The course module id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="pk_moss_result_id" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="repst1st2_index" UNIQUE="false" FIELDS="student1_id, student2_id" COMMENT="Index for student1_id, student2_id for fast searching"/>
+      </INDEXES>
+    </TABLE>
+
+
+  </TABLES>
+</XMLDB>
