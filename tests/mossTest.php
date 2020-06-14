@@ -104,6 +104,10 @@ require __DIR__ ."/ToTest.php";
             $read= $moss->send();
             $this->assertNotEmpty($read);
         }
+        public function testFiles(){
+            $moss = new MOSS(370143826);
+            $moss->addByWildcard("./ToTest.php");
+        }
 
     }
 ?>  
