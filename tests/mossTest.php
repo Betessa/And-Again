@@ -99,11 +99,11 @@ require __DIR__ ."/ToTest.php";
             $moss = new MOSS(370143826);
             $value= $moss->setExperimentalServer("This isn't a boolean");
         }
-        public function testSend(){
-            $moss = new MOSS(370143826);
-            $read= $moss->send();
-            $this->assertNotEmpty($read);
-        }
+        //public function testSend(){
+          //  $moss = new MOSS(370143826);
+            //$read= $moss->send();
+            //$this->assertNotEmpty($read);
+        //}
         public function testAddFile(){
             $moss = new MOSS(370143826);
             $value = $moss->addFile("ToTest.php");
