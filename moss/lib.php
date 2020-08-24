@@ -31,6 +31,7 @@ if (!defined('MOODLE_INTERNAL')) {
 
 //get global class
 global $CFG;
+require_once($CFG->dirroot.'/plagiarism/moss/utils.php');
 require_once($CFG->dirroot.'/plagiarism/lib.php');
 require_once(__DIR__.'/scan_assignment.php');
 require_once(__DIR__.'/moss.php');
@@ -219,10 +220,18 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
     public function update_status($course, $cm) {
         //called at top of submissions/grading pages - allows printing of admin style links or updating status
         global $OUTPUT, $DB, $USER, $CFG;
+
         $cmid = $cm->id;
         $context = context_module::instance($cmid);
         $assignment = $DB->get_record('plagiarism_moss', array('cmid' => $cmid));
 
+        $buttonlabel = get_string('rescanning', 'plagiarism_moss');
+        $buttonattr = array('type' => 'submit',
+                   'id' => 'plagiarism_moss_scan',
+                   'value' => $buttonlabel);
+        $scanbutton = html_writer::empty_tag('input', $buttonattr);
+        $resultlink='no data';
+        $resultlink1='no data';
         if (!$this->is_plugin_enabled($cmid)) {
             return '';
         }
@@ -231,94 +240,41 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
             return '';
         }
 
+        if($this->is_plugin_enabled($cmid) && !is_dir('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/')){
+          $content1=$this->send_to_moss($assignment,$cm);
+          $this->generateGraph($cmid);
 
-        $userid = "370143826"; // Enter your MOSS userid
-        $moss = new MOSS($userid);
-        $moss->setLanguage=$assignment->language;
+        }
 
-        plagiarism_moss_extract_assignment($assignment);
-        $moss->addByWildcard('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/*/*');
-        $fs = get_file_storage();
-        //$basefile = $fs->get_area_files($context->id, 'plagiarism_moss', 'codeseeding', $assignment->cmid, '', false);
-        //$basefiles =  plagiarism_moss_extract_file($basefile, plagiarism_moss_get_file_extension($assignment->language),'plagiarism_moss', $user = null, $textfileonly = true);
-        //$moss->addBaseFile($basefile);
+        else{
+          $setting1 = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
+          $website1=$setting1->resultlink;
+          $readFile=explode('/',$website1)[5];
+          $numberFile=explode('/',$website1)[4];
+          $resultlink1=$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/HTMLPage1.html';
+          $resultlink=$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html';
+          //$content1=file_get_contents('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
+        }
+      //$content1 .= html_writer::tag('form', $scanbutton, array(
+                      //'action' => system('open /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
 
-        $moss->setCommentString("This is a test");
-        //$content= $moss->send();
-        $content = "http://moss.stanford.edu/results/2/7148183356943/_";
-        $content = substr($content,0,strlen($content)-1);
-
-        //Download link
-        $content = file_get_contents(new moodle_url($content));
-        $content1=$content;
-
-        //Split data out of table
-        $arr = explode('<TABLE>',$content);
-        $arr = explode('</TABLE>',$arr[1]);
-
-        //Get needed data out of array
-        $content = $arr[0];
-
-        //Split by newlines
-        $lineSplitData = preg_split ('/$\R?^/m', $content);
-        $DB->delete_records('plagiarism_moss_result', array('cmid' => $cmid));
-        for ($i = 2; $i < count($lineSplitData); $i+=3)
-        {
-            //Get first position for link
-            $pos = strpos($lineSplitData[$i], '<A HREF="')+9;
-
-            //Get second position for link
-            $pos2 = strpos($lineSplitData[$i], '">', $pos);
-
-            //Cut from position for length pos2-pos
-            $link = substr($lineSplitData[$i], $pos,$pos2-$pos);
+        $content1 = '<a target="_blank" href='.$resultlink.'>'.get_string('stanford_link', 'plagiarism_moss').'</a> <br>';
 
 
-            //TODO something with link
-            $line1 = explode('/', $lineSplitData[$i]);
-            $student1=$line1[14];
-
-            $line2 = explode('/', $lineSplitData[$i+1]);
-            $student2=$line2[14];
-
-            $line1=explode('%', $lineSplitData[$i]);
-
-            $sim1 = substr($line1[0], -2);
-
-            $line2=explode('%', $lineSplitData[$i+1]);
-            $sim2 = substr($line2[0], -2);
-
-            $setting = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
-            $new = false;
-            if (!$setting) {
-                $new = true;
-                $setting = new stdClass();
-                $setting->cmid = $cmid;
-            }
-
-            $setting->student1_id=$student1;
-            $setting->student2_id =$student2;
-            $setting->resultlink=$link;
-            $setting->similarity1 = $sim1;
-            $setting->similarity2 = $sim2;
-
-
-
-            $setting->id = $DB->insert_record('plagiarism_moss_result', $setting);
-
-
-          }
+        $content1 .= '<a target="_blank" href='.$resultlink1.'>'.get_string('graph_link', 'plagiarism_moss').'</a> <br>';
 
 
 
         if ($content1) {
 
-            return $OUTPUT->box_start('generalbox boxaligncenter', 'plagiarism_info')
+          return $OUTPUT->box_start('generalbox boxaligncenter', 'plagiarism_info')
                 .$content1
                 .$OUTPUT->box_end();
          } else {
             return '';
         }
+
+
     }
 
     /**
@@ -327,6 +283,129 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
      */
     public function cron() {
         //do any scheduled task stuff
+    }
+    public function generateGraph($cmid){
+      global $OUTPUT, $DB, $USER, $CFG;
+      $myfile = fopen("graph.dot", "w");
+      $txt = "digraph D {\n";
+      fwrite($myfile, $txt);
+      $rs = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
+      $count=$DB->count_records('plagiarism_moss_result', array('cmid' => $cmid));
+      $id=$rs->id;
+      for($i=0;$i<$count;++$i){
+      $records = $DB->get_record('plagiarism_moss_result', array('id' => $id));
+      $std1=$records->student1_name;
+      $std2=$records->student2_name;
+      $s1Similar=$records->similarity1;
+      $s2Similar=$records->similarity2;
+      $txt = $std1."->".$std2." [label= ".$s1Similar."];\n";
+      fwrite($myfile, $txt);
+
+      $txt = $std2."->".$std1." [label= ".$s2Similar."];\n";
+      fwrite($myfile, $txt);
+      $id=$id+1;
+
+    }
+      //$content1.=$rs;
+      //$rs->close();
+      $txt = "}\n";
+      fwrite($myfile, $txt);
+      fclose($myfile);
+
+      shell_exec('/usr/local/bin/dot /Applications/MAMP/htdocs/moodle38/mod/assign/graph.dot -Tpng -o /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/mossGraph.png');
+      shell_exec('cp /Applications/MAMP/data/moodle38/temp/HTMLPage1.html /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'');
+    }
+
+    public function send_to_moss($assignment,$cm){
+      global $OUTPUT, $DB, $USER, $CFG;
+      $cmid = $cm->id;
+      $userid = "370143826"; // Enter your MOSS userid
+      $moss = new MOSS($userid);
+      $moss->setLanguage=$assignment->language;
+
+      plagiarism_moss_extract_assignment($assignment);
+      $moss->addByWildcard('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/*/*');
+      //$fs = get_file_storage();
+      //$basefile = $fs->get_area_files($context->id, 'plagiarism_moss', 'codeseeding', $assignment->cmid, '', false);
+      //$basefiles =  plagiarism_moss_extract_file($basefile, plagiarism_moss_get_file_extension($assignment->language),'plagiarism_moss', $user = null, $textfileonly = true);
+      //$moss->addBaseFile($basefile);
+
+      $moss->setCommentString("This is a test");
+      $website= $moss->send();
+      $website = substr($website,0,strlen($website)-1);
+
+      $readFile=explode('/',$website)[5];
+      $numberFile=explode('/',$website)[4];
+      shell_exec('/usr/local/bin/wget --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -P /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid. ' '.$website.'');
+      $content = file_get_contents('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
+      $content1=$content;
+      //$content1 .= html_writer::tag('form', $scanbutton, array('method' => 'post',
+              //'action' => $this->send_to_moss($assignment,$cm)));
+
+      //shell_exec('open /Applications/MAMP/htdocs/moodle38/plagiarism/moss/result.png');
+      //Split data out of table
+      $arr = explode('<TABLE>',$content);
+      $arr = explode('</TABLE>',$arr[1]);
+
+      //Get needed data out of array
+      $content = $arr[0];
+
+      //Split by newlines
+      $lineSplitData = preg_split ('/$\R?^/m', $content);
+      $DB->delete_records('plagiarism_moss_result', array('cmid' => $cmid));
+      for ($i = 2; $i < count($lineSplitData); $i+=3)
+      {
+          //Get first position for link
+          $pos = strpos($lineSplitData[$i], '<A HREF="')+9;
+
+          //Get second position for link
+          $pos2 = strpos($lineSplitData[$i], '">', $pos);
+
+          //Cut from position for length pos2-pos
+          $link = substr($lineSplitData[$i], $pos,$pos2-$pos);
+
+
+          //TODO something with link
+          $line1 = explode('/', $lineSplitData[$i]);
+
+
+          $student1=explode('_',$line1[9])[0];
+          $student1name=explode('_',$line1[9])[1];
+
+          $line2 = explode('/', $lineSplitData[$i+1]);
+
+          $student2=explode('_',$line2[9])[0];
+          $student2name=explode('_',$line2[9])[1];
+
+          $line1=explode('%', $lineSplitData[$i]);
+
+          $sim1 = substr($line1[0], -2);
+
+          $line2=explode('%', $lineSplitData[$i+1]);
+          $sim2 = substr($line2[0], -2);
+
+          $setting = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
+          $new = false;
+          if (!$setting) {
+              $new = true;
+              $setting = new stdClass();
+              $setting->cmid = $cmid;
+          }
+          $setting->resultlink=$website;
+          $setting->student1_id=$student1;
+          $setting->student2_id =$student2;
+          $setting->student1_name=$student1name;
+          $setting->student2_name =$student2name;
+
+          $setting->similarity1 = $sim1;
+          $setting->similarity2 = $sim2;
+
+
+
+          $setting->id = $DB->insert_record('plagiarism_moss_result', $setting);
+
+      }
+      return $content1;
     }
 
     private function setup_code_seeding_filemanager($mform, $plagiarismconfig, $assignmentcontext) {
