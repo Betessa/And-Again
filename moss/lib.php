@@ -219,17 +219,13 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
      */
     public function update_status($course, $cm) {
         //called at top of submissions/grading pages - allows printing of admin style links or updating status
-        global $OUTPUT, $DB, $USER, $CFG;
+        global $OUTPUT, $DB, $USER, $CFG, $PAGE;
 
         $cmid = $cm->id;
         $context = context_module::instance($cmid);
         $assignment = $DB->get_record('plagiarism_moss', array('cmid' => $cmid));
 
-        $buttonlabel = get_string('rescanning', 'plagiarism_moss');
-        $buttonattr = array('type' => 'submit',
-                   'id' => 'plagiarism_moss_scan',
-                   'value' => $buttonlabel);
-        $scanbutton = html_writer::empty_tag('input', $buttonattr);
+
         $resultlink='no data';
         $resultlink1='no data';
         if (!$this->is_plugin_enabled($cmid)) {
@@ -242,14 +238,12 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
 
         if($this->is_plugin_enabled($cmid) && !is_dir('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/')){
           $this->send_to_moss($assignment,$cm);
-          $this->generateGraph($cmid);
-          $string='ln  -s /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/  /Applications/MAMP/htdocs/moodle38/';
-          shell_exec($string);
           $setting1 = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
           $website1=$setting1->resultlink;
           $readFile=explode('/',$website1)[5];
           $numberFile=explode('/',$website1)[4];
-          $resultlink1=$CFG->wwwroot.'/'.$cmid.'/HTMLPage1.html';
+          $resultlink1=$CFG->wwwroot.'/'.$cmid.'/HTMLPage2.html';
+
           $resultlink=$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html';
 
         }
@@ -260,14 +254,36 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
           $readFile=explode('/',$website1)[5];
           $numberFile=explode('/',$website1)[4];
           $resultlink1=$CFG->wwwroot.'/'.$cmid.'/HTMLPage2.html';
+
           $resultlink=$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html';
           //$content1=file_get_contents('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
         }
+        $alreadyscanned=true;
+        if ($this->is_plugin_enabled($cmid)) {
+            // Write the rescan button if the user has the capability to do so.
+            $buttonlabel = ($alreadyscanned) ?
+                    get_string('rescanning', 'plagiarism_moss') :
+                    get_string('start_scanning', 'plagiarism_moss');
+            $buttonattr = array('type' => 'submit',
+                    'id' => 'plagiarism_moss_scan',
+                    'value' => $buttonlabel);
+            if ($buttondisabled) {
+                $buttonattr['disabled'] = 'disabled';
+            }
+        }
+        $scanbutton = html_writer::empty_tag('input', $buttonattr);
 
-        //$content1 .= html_writer::tag('form', $scanbutton, array('method' => 'post',
-                //'action' => $this->send_to_moss($assignment,$cm)));
+        $content1 = html_writer::tag('form', $scanbutton, array('method' => 'post',
+                 'action'=>"$CFG->wwwroot/plagiarism/moss/sendToMoss.php"));
 
-        $content1 = '<a target="_blank" href='.$resultlink.'>'.get_string('stanford_link', 'plagiarism_moss').'</a> <br>';
+        $content1.='<button onClick="window.location.reload();" type="button">myButton</button>';
+
+
+
+
+
+
+        $content1 .= '<a target="_blank" href='.$resultlink.'>'.get_string('stanford_link', 'plagiarism_moss').'</a> <br>';
 
 
         $content1 .= '<a target="_blank" href='.$resultlink1.'>'.get_string('graph_link', 'plagiarism_moss').'</a> <br>';
@@ -294,42 +310,49 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
         //do any scheduled task stuff
     }
     public function generateGraph($cmid){
-      global $OUTPUT, $DB, $USER, $CFG;
-      $myfile = fopen("graph.dot", "w");
-      $txt = "digraph D {\n";
-      fwrite($myfile, $txt);
-      $rs = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
-      $count=$DB->count_records('plagiarism_moss_result', array('cmid' => $cmid));
-      $id=$rs->id;
-      $website1=$rs->resultlink;
-      $readFile=explode('/',$website1)[5];
-      $numberFile=explode('/',$website1)[4];
+          global $OUTPUT, $DB, $USER, $CFG;
+          $myfile = fopen("graph.dot", "w");
+          $txt = "digraph D {\n";
+          fwrite($myfile, $txt);
+          $rs = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
+          $count=$DB->count_records('plagiarism_moss_result', array('cmid' => $cmid));
+          $id=$rs->id;
+          $website1=$rs->resultlink;
+          $readFile=explode('/',$website1)[5];
+          $numberFile=explode('/',$website1)[4];
 
-      for($i=0;$i<$count;++$i){
-      $records = $DB->get_record('plagiarism_moss_result', array('id' => $id));
-      $match='match'.$i.'.html';
-      $std1=$records->student1_name;
-      $std2=$records->student2_name;
-      $s1Similar=$records->similarity1;
-      $s2Similar=$records->similarity2;
+          for($i=0;$i<$count;++$i){
+          $records = $DB->get_record('plagiarism_moss_result', array('id' => $id));
+          $match='match'.$i.'.html';
+          $std1=$records->student1_name;
+          $std2=$records->student2_name;
+          $s1Similar=$records->similarity1;
+          $s2Similar=$records->similarity2;
+          $threshold=50;
+          if ($s1Similar<$threshold){
+            $s1Similar='';
+          }
+          if ($s2Similar<$threshold){
+            $s2Similar='';
+          }
+          $Similar=intval($s1Similar).'/'.intval($s2Similar).' ';
 
-      $txt = $std1.'->'.$std2.' [label= '.$s1Similar.',edgeURL="'.$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'/'.$match.'"];'."\n";
-      fwrite($myfile, $txt);
+          if($s1Similar!=''||$s2Similar!=''){
+          $txt = $std1.'->'.$std2.' [dir=none, label="'.$Similar.'",edgeURL="'.$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'/'.$match.'"];'."\n";
+          fwrite($myfile, $txt);
+          }
 
-      $txt = $std2.'->'.$std1.' [label= '.$s2Similar.',edgeURL="'.$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'/'.$match.'"];'."\n";
-      fwrite($myfile, $txt);
-      $id=$id+1;
+          $id=$id+1;
+        }
 
-    }
-      //$content1.=$rs;
-      //$rs->close();
-      $txt = "}\n";
-      fwrite($myfile, $txt);
-      fclose($myfile);
+          $txt = "}\n";
+          fwrite($myfile, $txt);
+          fclose($myfile);
 
-      shell_exec('/usr/local/bin/dot -Tsvg /Applications/MAMP/htdocs/moodle38/mod/assign/graph.dot  -o /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
-      shell_exec('cp /Applications/MAMP/data/moodle38/temp/HTMLPage2.html /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'');
-    }
+          shell_exec('/usr/local/bin/dot -Tsvg /Applications/MAMP/htdocs/moodle38/mod/assign/graph.dot  -o /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
+          shell_exec('cp /Applications/MAMP/data/moodle38/temp/HTMLPage2.html /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'');
+        }
+
 
     public function send_to_moss($assignment,$cm){
       global $OUTPUT, $DB, $USER, $CFG;
@@ -354,8 +377,7 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
       shell_exec('/usr/local/bin/wget --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -P /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid. ' '.$website.'');
       $content = file_get_contents('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
       $content1=$content;
-      //$content1 .= html_writer::tag('form', $scanbutton, array('method' => 'post',
-              //'action' => $this->send_to_moss($assignment,$cm)));
+
 
       //shell_exec('open /Applications/MAMP/htdocs/moodle38/plagiarism/moss/result.png');
       //Split data out of table
@@ -419,7 +441,11 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
 
           $setting->id = $DB->insert_record('plagiarism_moss_result', $setting);
 
+
       }
+      $this->generateGraph($cmid);
+      $string='ln  -s /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/  /Applications/MAMP/htdocs/moodle38/';
+      shell_exec($string);
       return $content1;
     }
 
