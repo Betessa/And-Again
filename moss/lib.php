@@ -258,29 +258,23 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
           $resultlink=$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html';
           //$content1=file_get_contents('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
         }
-        $alreadyscanned=true;
-        if ($this->is_plugin_enabled($cmid)) {
+
             // Write the rescan button if the user has the capability to do so.
-            $buttonlabel = ($alreadyscanned) ?
-                    get_string('rescanning', 'plagiarism_moss') :
-                    get_string('start_scanning', 'plagiarism_moss');
-            $buttonattr = array('type' => 'submit',
+        $buttonlabel = get_string('rescanning', 'plagiarism_moss');
+
+        $buttonattr = array('type' => 'submit',
                     'id' => 'plagiarism_moss_scan',
                     'value' => $buttonlabel);
-            if ($buttondisabled) {
-                $buttonattr['disabled'] = 'disabled';
-            }
-        }
+
         $scanbutton = html_writer::empty_tag('input', $buttonattr);
 
         $content1 = html_writer::tag('form', $scanbutton, array('method' => 'post',
-                 'action'=>"$CFG->wwwroot/plagiarism/moss/sendToMoss.php"));
-
-        $content1.='<button onClick="window.location.reload();" type="button">myButton</button>';
+                 'action'=>"$CFG->wwwroot/plagiarism/moss/sendToMoss.php?cmid=$cmid"));
 
 
-
-
+        $content1.='<input type="text" id="threshold" name="Threshold"><br>';
+        $content1.='<input type="submit" value="Submit"><br>';
+      
 
 
         $content1 .= '<a target="_blank" href='.$resultlink.'>'.get_string('stanford_link', 'plagiarism_moss').'</a> <br>';
