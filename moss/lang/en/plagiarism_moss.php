@@ -28,6 +28,7 @@ $string['mossexplain'] = 'Moss is a source-code plagiarism checker';
 $string['moss'] =  'Moss anti-plagiarism';
 $string['graph_link'] =  'Graph Results';
 $string['stanford_link'] =  'Plagiarism Results';
+$string['rescanning'] = 'rescan';
 $string['timetomeasure'] ='Time to measure';
 $string['sentfile']='Files to be sent to moodle';
 $string['sent_help']='Please download the submissions that are not in folders and upload the zip, and then unzip the file and delte the zip';
