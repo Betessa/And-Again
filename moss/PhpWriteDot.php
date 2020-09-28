@@ -11,7 +11,11 @@ public function generateGraph($cmid){
       $readFile=explode('/',$website1)[5];
       $numberFile=explode('/',$website1)[4];
 
-
+      //Assumed values from HTMLPage
+      $threshold=28;
+      $thick=true;
+      $articulation=true;
+      $clusters=true;
 
       for($i=0;$i<$count;++$i){
       $records = $DB->get_record('plagiarism_moss_result', array('id' => $id));
@@ -20,26 +24,33 @@ public function generateGraph($cmid){
       $std2=$records->student2_name;
       $s1Similar=$records->similarity1;
       $s2Similar=$records->similarity2;
-      if ($s1Similar<50){
+
+      if ($s1Similar<$threshold){
         $s1Similar='';
       }
-      if ($s2Similar<50){
+      if ($s2Similar<$threshold){
         $s2Similar='';
       }
+      $Similar=intval($s1Similar).'/'.intval($s2Similar).' ';
 
-      $Similar=$s1Similar.'/'.$s2Similar;
-      if($s1Similar!==''||$s2Similar!==''){
-      $txt = $std1.'->'.$std2.' [dir=none, headlabel= '.$s1Similar.',taillabel= '.$s2Similar.',edgeURL="'.$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'/'.$match.'"];'."\n";
+      $penwidth='';
+      if($thick){
+        $thickValue=(($s1Similar+$s2Similar)/200.0)*3.0;
+        $penwidth='penwidth= '.$thickValue;
+      }
+
+      if($s1Similar!=''||$s2Similar!=''){
+      $txt = $std1.'->'.$std2.' [dir=none, label="'.$Similar.'"'.$penwidth.',edgeURL="'.$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'/'.$match.'"];'."\n";
       fwrite($myfile, $txt);
       }
 
+
+
       $id=$id+1;
+      }
 
 
 
-    }
-      //$content1.=$rs;
-      //$rs->close();
       $txt = "}\n";
       fwrite($myfile, $txt);
       fclose($myfile);
