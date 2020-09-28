@@ -235,6 +235,9 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
         if (!$assignment) { // Plagiarism scanning turned off.
             return '';
         }
+        if (!is_dir('/Applications/MAMP/data/moodle38/temp/plagiarism_moss')){
+          mkdir('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/');
+        }
 
         if($this->is_plugin_enabled($cmid) && !is_dir('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/')){
           $this->send_to_moss($assignment,$cm);
@@ -242,8 +245,8 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
           $website1=$setting1->resultlink;
           $readFile=explode('/',$website1)[5];
           $numberFile=explode('/',$website1)[4];
-          $resultlink1=$CFG->wwwroot.'/'.$cmid.'/HTMLPage2.html';
-
+          $resultlink1=$CFG->wwwroot.'/plagiarism/moss/test.php?cmid='.$cmid.'';
+           //$resultlink1=$CFG->wwwroot.'/'.$cmid.'/HTMLPage1.html';
           $resultlink=$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html';
 
         }
@@ -253,8 +256,8 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
           $website1=$setting1->resultlink;
           $readFile=explode('/',$website1)[5];
           $numberFile=explode('/',$website1)[4];
-          $resultlink1=$CFG->wwwroot.'/'.$cmid.'/HTMLPage2.html';
-
+          //$resultlink1=$CFG->wwwroot.'/plagiarism/moss/HTMLPage1.html';
+          $resultlink1=$CFG->wwwroot.'/plagiarism/moss/test.php?cmid='.$cmid.'';
           $resultlink=$CFG->wwwroot.'/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html';
           //$content1=file_get_contents('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
         }
@@ -273,8 +276,8 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
 
 
         $content1.='<input type="text" id="threshold" name="Threshold"><br>';
-        $content1.='<input type="submit" value="Submit"><br>';
-      
+        //$content1.='<input type="submit" value="Submit"><br>';*/
+
 
 
         $content1 .= '<a target="_blank" href='.$resultlink.'>'.get_string('stanford_link', 'plagiarism_moss').'</a> <br>';
@@ -305,7 +308,7 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
     }
     public function generateGraph($cmid){
           global $OUTPUT, $DB, $USER, $CFG;
-          $myfile = fopen("graph.dot", "w");
+          $myfile = fopen('graph.dot', "w");
           $txt = "digraph D {\n";
           fwrite($myfile, $txt);
           $rs = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
@@ -344,7 +347,9 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
           fclose($myfile);
 
           shell_exec('/usr/local/bin/dot -Tsvg /Applications/MAMP/htdocs/moodle38/mod/assign/graph.dot  -o /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
-          shell_exec('cp /Applications/MAMP/data/moodle38/temp/HTMLPage2.html /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'');
+          shell_exec('cp /Applications/MAMP/data/moodle38/temp/HTMLPage1.html /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'');
+          shell_exec('cp /Applications/MAMP/data/moodle38/temp/test.php /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'');
+
         }
 
 
