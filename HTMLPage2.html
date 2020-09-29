@@ -14,6 +14,8 @@
 <body>
     <h1 align=center>MOSS results</h1>
     <td  align="center">
+
+	<form action="test.php" method="get">
         <h2>Options</h2>
         <input type="checkbox" id= "option1">
         <label for="option1"> Option 1</label>
@@ -24,22 +26,12 @@
         <input type="checkbox" id= "option3">
         <label for="option3"> Option 3</label>
         <br>
-        <button type="button">Show new graph</button>
+        <input type="submit">
     </td>
-
-    <object type="image/svg+xml" data="mossGraph.svg">
-    <svg viewBox="0 0 500 550" width="500" height="100">
-		<src "mossGraph.svg" >
-	</svg>
-  </object>
-<a href="mossGraph.svg" download="PlaigarismGraph">
-  <img src"mossGraph.svg" alt="Download graph">
-</a>
-<a href="match0.html" download>
-<img src"mossGraph.svg" alt="Download Similarity">
-
-</a>
-
-	
+    </form>
+    <div class="img-container">
+      <img src="mossGraph.png" />
+    </div>
+    
 </body>
 </html>
