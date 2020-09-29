@@ -17,6 +17,88 @@ public function generateGraph($cmid){
       $articulation=true;
       $clusters=true;
 
+      //required for bfs
+      $adjacencyMatrix= array(array());//matrix of edges
+      $visited=array();
+      //required articulation points
+      $articulationPoints=array();
+
+      //intialise $adjacencyMatrix and $visited
+      for($i=0;$i<$count;++$i){
+        $records = $DB->get_record('plagiarism_moss_result', array('id' => $id));
+        $match='match'.$i.'.html';
+        $std1=$records->student1_name;
+        $std2=$records->student2_name;
+        $s1Similar=$records->similarity1;
+        $s2Similar=$records->similarity2;
+
+        if($s1Similar>$threshold||$s2Similar>$threshold){
+          $adjacencyMatrix[$std1][$std2]= 1;
+          $adjacencyMatrix[$std2][$std1]= 1;
+        }else{
+          $adjacencyMatrix[$std1][$std2]= 0;
+          $adjacencyMatrix[$std2][$std1]= 0;
+        }
+        $visited[$std1]=false;
+        $visited[$std2]=false;
+
+        $id=$id+1;
+      }
+      //We need to perform BFS on every node
+      foreach(array_keys($adjacencyMatrix) as $node) {
+
+        //We work with a copy of the matrix so that we can remove nodes in peace
+        $copy=$adjacencyMatrix;
+        //intialise SearchGoals
+        $goals=array();
+        foreach(array_keys($adjacencyMatrix[$node]) as $posGoals) {
+          if($adjacencyMatrix[$node][$posGoals]==1){
+            array_push($goals,$posGoals);
+            $copy[$node][$posGoals]=0;
+            $copy[$posGoals][$node]=0;
+          }
+        }
+        //if there is 1 edge or less we know it cannot be a articulation point
+        if (count($goals)>1) {
+          $queue = new SplQueue();
+          $queue->enqueue($goals[0]);
+          $visited[$goals[0]]=true;
+
+          // actual BFS
+          while (!$queue->isEmpty()){
+            $v=$queue->bottom();
+            $queue->dequeue();
+            if (($key = array_search($v, $goals)) !== false) {
+              unset($goals[$key]);
+            }
+            foreach (array_keys($copy[$v]) as $traversal) {
+              if ($copy[$v][$traversal]==1 && (!$visited[$traversal])){
+                $queue->enqueue($traversal);
+
+                $visited[$traversal]=true;
+              }
+            }
+          }
+          unset($queue);
+          //add it to articualtion Points
+          if (!empty($goals)){
+            array_push($articulationPoints,$node);
+          }
+          foreach ($visited as &$vis) {
+            $vis=false;
+          }
+        }
+      }
+      //draw articualtion points on graph
+      if ($articulation) {
+        foreach ($articulationPoints as $ap) {
+          $txt = $ap.'[shape=triangle];'."\n";
+          fwrite($myfile, $txt);
+        }
+      }
+      //reseting id so that we can create dot file
+      $id=$rs->id;
+
       for($i=0;$i<$count;++$i){
       $records = $DB->get_record('plagiarism_moss_result', array('id' => $id));
       $match='match'.$i.'.html';
