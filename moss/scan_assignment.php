@@ -259,7 +259,10 @@ function plagiarism_moss_extract_assignment($assignment) {
     foreach ($filerecords as $file) {
         $validfile = false;
         $userid = $file->get_userid();
-        $userdir = $tempsubmissiondir . $userid . '/';
+        $setting = $DB->get_record('user', array('id' => $userid));
+        $fulldir= $setting->firstname .  $setting->lastname;
+        $userdir = $tempsubmissiondir . $userid .'_'. $fulldir. '/';
+
         if (!is_dir($userdir)) {
             mkdir($userdir);
         }

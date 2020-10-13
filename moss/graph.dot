@@ -1,0 +1,8 @@
+digraph D {
+Student4Student_7[color="#EC2198"];
+Student1Student_4[color="#EC2198"];
+Student5Studenent_8[color="#7298AE"];
+Student2Student2_5[color="#7298AE"];
+Student1Student_4->Student4Student_7 [dir=none, label="55/53 "penwidth= 2.7,edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3400162962238/match0.html"];
+Student2Student2_5->Student5Studenent_8 [dir=none, label="51/50 "penwidth= 2.525,edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3400162962238/match1.html"];
+}

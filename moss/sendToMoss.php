@@ -15,7 +15,7 @@ $moss = new MOSS($userid);
 $moss->setLanguage=$assignment->language;
 
 plagiarism_moss_extract_assignment($assignment);
-$moss->addByWildcard('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/*/*');
+$moss->addByWildcard($CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/*/*');
 //$fs = get_file_storage();
 //$basefile = $fs->get_area_files($context->id, 'plagiarism_moss', 'codeseeding', $assignment->cmid, '', false);
 //$basefiles =  plagiarism_moss_extract_file($basefile, plagiarism_moss_get_file_extension($assignment->language),'plagiarism_moss', $user = null, $textfileonly = true);
@@ -27,8 +27,8 @@ $website = substr($website,0,strlen($website)-1);
 
 $readFile=explode('/',$website)[5];
 $numberFile=explode('/',$website)[4];
-shell_exec('/usr/local/bin/wget --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -P /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid. ' '.$website.'');
-$content = file_get_contents('/Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
+shell_exec('/usr/local/bin/wget --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -P $CFG->dataroot/temp/plagiarism_moss/'.$cmid. ' '.$website.'');
+$content = file_get_contents($CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
 $content1=$content;
 
 
@@ -97,7 +97,7 @@ for ($i = 2; $i < count($lineSplitData); $i+=3)
 
 }
 
-$myfile = fopen("graph.dot", "w");
+$myfile = fopen('graph.dot', "w");
 $txt = "digraph D {\n";
 fwrite($myfile, $txt);
 $rs = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
@@ -114,7 +114,7 @@ $std1=$records->student1_name;
 $std2=$records->student2_name;
 $s1Similar=$records->similarity1;
 $s2Similar=$records->similarity2;
-$threshold=50;
+$threshold=28;
 if ($s1Similar<$threshold){
   $s1Similar='';
 }
@@ -135,11 +135,13 @@ $txt = "}\n";
 fwrite($myfile, $txt);
 fclose($myfile);
 
-shell_exec('/usr/local/bin/dot -Tsvg /Applications/MAMP/htdocs/moodle38/plagiarism/moss/graph.dot  -o /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
-shell_exec('cp /Applications/MAMP/data/moodle38/temp/HTMLPage2.html /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'');
+shell_exec('/usr/local/bin/dot -Tsvg /Applications/MAMP/htdocs/moodle38/plagiarism/moss/graph.dot  -o '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
+shell_exec('cp '.$CFG->dataroot.'/temp/HTMLPage1.html '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'');
 
 
-$string='ln  -s /Applications/MAMP/data/moodle38/temp/plagiarism_moss/'.$cmid.'/  /Applications/MAMP/htdocs/moodle38/';
+
+
+$string='ln  -s $CFG->dataroot/temp/plagiarism_moss/'.$cmid.'/  /Applications/MAMP/htdocs/moodle38/';
 shell_exec($string);
 
 echo '<script type="text/javascript">

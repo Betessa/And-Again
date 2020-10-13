@@ -236,14 +236,12 @@ class MOSS {
 	 * @param  int $id     0 = Basefile, incrementing for every normal file
 	 * @return void
 	 */
-	// @codeCoverageIgnoreStart
 	private function uploadFile($handle, $file, $id){
 		$size = filesize($file);
 		$file_name_fixed = str_replace(" ", "_", $file);
 		fwrite($handle, "file ".$id." ".$this->options['l']." ".$size." ".$file_name_fixed."\n");
 		fwrite($handle, file_get_contents($file));
 	}
-	// @codeCoverageIgnoreEnd
 
 }
 
