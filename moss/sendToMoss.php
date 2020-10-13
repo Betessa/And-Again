@@ -25,6 +25,7 @@ $moss->setCommentString("This is a test");
 $website= $moss->send();
 if($website=''){
 echo 'There is an issue with the server, please try again later';
+    break;
 }
 $website = substr($website,0,strlen($website)-1);
 
