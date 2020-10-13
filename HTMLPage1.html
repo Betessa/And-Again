@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Plaigarism results</title>
+    <style>
+      .img-container {
+        text-align: center;
+        display: block;
+      }
+	body {
+           background-image: url('background.jpg');
+ 	   background-repeat: no-repeat;
+  	   background-attachment: fixed;
+  	   background-size: cover;
+       }
+
+    </style>
+</head>
+<body>
+    <h1 align=center>MOSS results</h1>
+    <td  align="center">
+	<a href="Help.html">Need some help?</a>
+	<form action="test.php" method="get">
+        <h2>Options</h2>
+        <input type="checkbox" name= "option1" value="Yes">
+        <label for="option1">Thickness</label>
+        <br>
+        <input type="checkbox" name= "option2" value="Yes">
+        <label for="option2">Cluster/Color</label>
+        <br>
+        <input type="checkbox" name= "option3" value="Yes">
+        <label for="option3">Articulation Point</label>
+        <br>
+        <input type="checkbox" name= "option4" value="Yes">
+        <label for="option4">Student Name</label>
+        <br>
+        <input type="checkbox" name= "option5" value="Yes">
+        <label for="option5">Student Number</label>
+        <br>
+        Threshold <0,100>: <input type="number" name="threshold" value="50" min="0" max="100"><br>
+        <input type="hidden" id="cmid" name="cmid" value="13">
+        <input type="submit">
+
+    </td>
+    </form>
+
+
+</body>
+</html>

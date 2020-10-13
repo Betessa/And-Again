@@ -1,0 +1,12 @@
+digraph D {
+Student4Student_7[color="#3EFBD8"];
+Student5Studenent_8[color="#3EFBD8"];
+Student2Student2_5[color="#3EFBD8"];
+Student1Student_4[color="#3EFBD8"];
+Student1Student_4->Student4Student_7 [dir=none, label="55/53 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3977457518662/match0.html"];
+Student2Student2_5->Student5Studenent_8 [dir=none, label="51/50 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3977457518662/match1.html"];
+Student1Student_4->Student5Studenent_8 [dir=none, label="39/42 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3977457518662/match2.html"];
+Student4Student_7->Student5Studenent_8 [dir=none, label="36/39 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3977457518662/match3.html"];
+Student1Student_4->Student2Student2_5 [dir=none, label="27/29 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3977457518662/match4.html"];
+Student2Student2_5->Student4Student_7 [dir=none, label="24/22 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3977457518662/match5.html"];
+}

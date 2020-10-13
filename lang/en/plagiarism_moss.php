@@ -26,6 +26,8 @@ $string['studentdisclosure'] = 'Student Disclosure';
 $string['studentdisclosure_help'] = 'This text will be displayed to all students on the file upload page.';
 $string['mossexplain'] = 'Moss is a source-code plagiarism checker';
 $string['moss'] =  'Moss anti-plagiarism';
+$string['graph_link'] =  'Graph Results';
+$string['stanford_link'] =  'Plagiarism Results';
 $string['timetomeasure'] ='Time to measure';
 $string['sentfile']='Files to be sent to moodle';
 $string['sent_help']='Please download the submissions that are not in folders and upload the zip, and then unzip the file and delte the zip';
@@ -42,6 +44,7 @@ $string['langascii'] = 'Text';
 $string['langmips'] = 'MIPS assembly';
 $string['langa8086'] = 'a8086 assembly';
 $string['mossuserid'] ='Moss User id';
+$string['rescanning'] ='Rescan';
 $string['mossuserid_help'] ='To obtain a Moss account, send a mail message to <a href="mailto:moss@moss.stanford.edu">moss@moss.stanford.edu</a>. The body of the message should be in <strong>PLAIN TEXT</strong>(without any HTML tags) format and appear exactly as follows:
 
     registeruser
