@@ -135,13 +135,12 @@ $txt = "}\n";
 fwrite($myfile, $txt);
 fclose($myfile);
 
-shell_exec('/usr/local/bin/dot -Tsvg /Applications/MAMP/htdocs/moodle38/plagiarism/moss/graph.dot  -o '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
+
 shell_exec('cp '.$CFG->dataroot.'/temp/HTMLPage1.html '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'');
 
 
 
-
-$string='ln  -s $CFG->dataroot/temp/plagiarism_moss/'.$cmid.'/  /Applications/MAMP/htdocs/moodle38/';
+$string='ln  -s '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/  '.$CFG->wwwroot.'';
 shell_exec($string);
 
 echo '<script type="text/javascript">
