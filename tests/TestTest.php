@@ -26,5 +26,15 @@ class TestTest extends PHPUnit_Framework_TestCase
         $text = $Graph->generateGraph(30,40,50, true,false,true, "Name1",1,"Name2",2);
         $this-> assertEquals('1->2 [dir=none, label="40/50 "penwidth= 2.25"];', $text);
     }
+    public function testGraphOnlyName(){
+        $Graph = new ToTestGraph("Hi");
+        $text = $Graph->generateGraph(30,40,50, true,true,false, "Name1",1,"Name2",2);
+        $this-> assertEquals('Name1->Name2 [dir=none, label="40/50 "penwidth= 2.25"];', $text);
+    }
+    public function testGraphBothIdNameFalse(){
+        $Graph = new ToTestGraph("Hi");
+        $text = $Graph->generateGraph(30,40,50, true,false,false, "Name1",1,"Name2",2);
+        $this-> assertEquals('1->2 [dir=none, label="40/50 "penwidth= 2.25"];', $text);
+    }
 
 }
