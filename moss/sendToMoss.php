@@ -23,6 +23,9 @@ $moss->addByWildcard($CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/*/*');
 
 $moss->setCommentString("This is a test");
 $website= $moss->send();
+if($website=''){
+echo 'There is an issue with the server, please try again later';
+}
 $website = substr($website,0,strlen($website)-1);
 
 $readFile=explode('/',$website)[5];
