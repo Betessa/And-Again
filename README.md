@@ -19,3 +19,4 @@ To install and use this Moss plagiarism checker plugin into moodle you should:
 
 Feel free to report any issues.
 
+Taiga: https://tree.taiga.io/project/betessa-plagiarism-detection-devonions/backlog
