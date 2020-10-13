@@ -147,5 +147,5 @@ $string='ln  -s '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/  '.$CFG->wwwr
 shell_exec($string);
 
 echo '<script type="text/javascript">
-    window.open("http://localhost:8888/moodle38/mod/assign/view.php?id=13&rownum=0&useridlistid=5f60786426f07024638823&action=grading");
+      window.history.back();
 </script>';
