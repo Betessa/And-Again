@@ -215,7 +215,10 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
 
 
         if($this->is_plugin_enabled($cmid) && !is_dir($CFG->dataroot.'/temp/plagiarism_moss'.'/'.$cmid.'/'.'moss.stanford.edu/')){
-          $this->send_to_moss($assignment,$cm);
+          $hello=$this->send_to_moss($assignment,$cm);
+          if($hello==''){
+            echo 'There may be issues with moss, please try again later';
+          }
           $setting1 = $DB->get_record('plagiarism_moss_result', array('cmid' => $cmid));
           $website1=$setting1->resultlink;
           $readFile=explode('/',$website1)[5];
