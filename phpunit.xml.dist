@@ -8,6 +8,7 @@
     <testsuites>
         <testsuite name="Example">
             <file>./tests/mossTest.php</file>
+             <file>./tests/TestTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
