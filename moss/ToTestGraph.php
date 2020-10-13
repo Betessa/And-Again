@@ -9,10 +9,7 @@
      }
 
 
-     public function getHi()
-     {
-         return $this->hi;
-     }
+
 
      public function generateGraph($threshold, $Sim1, $Sim2, $thickness, $studentname, $studentid, $studentname1, $studentid1, $studentname2, $studentid2)
      {
