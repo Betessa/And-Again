@@ -241,7 +241,7 @@ Echo "<html>";
 Echo
 "<title>HTML With PHP</title>";
 
-$input=file_get_contents($CFG->dataroot.'/temp/plagiarism_moss/13/HTMLPage1.html');
+$input=file_get_contents($CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/HTMLPage1.html');
 $input=explode("\n",$input);
 
 if(isset($_GET['option1']) && $_GET['option1'] == 'Yes'){
@@ -274,7 +274,7 @@ $input=implode("\n",$input);
 
 echo $input;
 
-echo file_get_contents($CFG->dataroot.'/temp/plagiarism_moss/13/mossGraph.svg');
+echo file_get_contents($CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
 }
 else if($isteacher = has_capability('mod/assignment:grade', $context)){
 echo "You do not have the capability to view this page";
