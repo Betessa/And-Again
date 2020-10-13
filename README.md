@@ -9,11 +9,13 @@ To install and use this Moss plagiarism checker plugin into moodle you should:
 
 2.Install the zip as a plagiarism plugin
 
-3.enable plagiarism in moodle settings
+3.Copy the HTMLPage1.html file into the $CFG->dataroot/temp folder
 
-4.enable the Moss plagiarism checker plugin in plagiarism settings
+4.Enable plagiarism in moodle settings
 
-5.enable the plugin in desired course modules
+5.Enable the Moss plagiarism checker plugin in plagiarism settings
+
+6.Enable the plugin in desired course modules
 
 Feel free to report any issues.
 
