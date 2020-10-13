@@ -1,8 +1,12 @@
 digraph D {
-Student4Student_7[color="#EC2198"];
-Student1Student_4[color="#EC2198"];
-Student5Studenent_8[color="#7298AE"];
-Student2Student2_5[color="#7298AE"];
-Student1Student_4->Student4Student_7 [dir=none, label="55/53 "penwidth= 2.7,edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3400162962238/match0.html"];
-Student2Student2_5->Student5Studenent_8 [dir=none, label="51/50 "penwidth= 2.525,edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/5/3400162962238/match1.html"];
+-91[color="#F54091"];
+-90[color="#F54091"];
+-93[color="#F54091"];
+-94[color="#F54091"];
+-94->-91 [dir=none, label="55/53 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/9/6455920001930/match0.html"];
+-93->-90 [dir=none, label="51/50 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/9/6455920001930/match1.html"];
+-94->-90 [dir=none, label="39/42 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/9/6455920001930/match2.html"];
+-91->-90 [dir=none, label="36/39 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/9/6455920001930/match3.html"];
+-94->-93 [dir=none, label="27/29 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/9/6455920001930/match4.html"];
+-93->-91 [dir=none, label="24/22 ",edgeURL="http://localhost:8888/moodle38/13/moss.stanford.edu/results/9/6455920001930/match5.html"];
 }

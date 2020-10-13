@@ -1,9 +1,10 @@
 
 <?php
-global $OUTPUT, $DB, $USER, $CFG;
+global $OUTPUT, $DB, $USER, $CFG ,$SET;
 
 
 require_once('../../config.php');
+require_once('../../settings.php');
 require_once($CFG->dirroot.'/scan_assignment.php');
 require_once($CFG->dirroot.'/moss.php');
 
@@ -15,7 +16,7 @@ $cmid = required_param('cmid', PARAM_INT);
 $context = context_module::instance($cmid);
 if($isteacher = has_capability('mod/assignment:grade', $context)){
 function generateGraph($cmid,$threshold,$clusters,$thickness,$articulation,$studentname,$studentid){
-    global $OUTPUT, $DB, $USER, $CFG;
+    global $OUTPUT, $DB, $USER, $CFG,$SET;
     $myfile = fopen("graph.dot", "w");
     $txt = "digraph D {\n";
     fwrite($myfile, $txt);
@@ -226,7 +227,7 @@ function generateGraph($cmid,$threshold,$clusters,$thickness,$articulation,$stud
 
 
 
-    shell_exec('/usr/local/bin/dot -Tsvg '.$CFG->dirroot.'/plagiarism/moss/graph.dot  -o '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
+    shell_exec($SET->dot.' -Tsvg '.$CFG->dirroot.'/plagiarism/moss/graph.dot  -o '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
       shell_exec('cp '.$CFG->dataroot.'/temp/HTMLPage1.html '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'');
 
   }

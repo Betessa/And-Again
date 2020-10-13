@@ -6,7 +6,8 @@ if (!defined('MOODLE_INTERNAL')) {
 }
 
 //get global class
-global $CFG;
+global $CFG,$SET;
+require_once($CFG->dirroot.'/settings.php');
 require_once($CFG->dirroot.'/plagiarism/moss/utils.php');
 require_once($CFG->dirroot.'/plagiarism/lib.php');
 require_once(__DIR__.'/scan_assignment.php');
@@ -252,7 +253,6 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
 
         $content1 = '<a target="_blank" href='.$resultlink.'>'.get_string('stanford_link', 'plagiarism_moss').'</a> <br>';
 
-
         $content1 .= '<a target="_blank" href='.$resultlink1.'>'.get_string('graph_link', 'plagiarism_moss').'</a> <br>';
 
         $content1 .= html_writer::tag('form', $scanbutton, array('method' => 'post',
@@ -279,7 +279,7 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
         //do any scheduled task stuff
     }
     public function generateGraph($cmid){
-          global $OUTPUT, $DB, $USER, $CFG;
+          global $OUTPUT, $DB, $USER, $CFG ,$SET;
           $myfile = fopen($CFG->wwwroot.'/plagiarism/moss/graph.dot', "r");
           $txt = "digraph D {\n";
           fwrite($myfile, $txt);
@@ -318,7 +318,7 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
           fwrite($myfile, $txt);
           fclose($myfile);
 
-          shell_exec('/usr/local/bin/dot -Tsvg '.$CFG->wwwroot.'/plagiarism/moss/graph.dot  -o '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
+          shell_exec($SET->dot.' -Tsvg '.$CFG->wwwroot.'/plagiarism/moss/graph.dot  -o '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'/mossGraph.svg');
           shell_exec('cp '.$CFG->dataroot.'/temp/HTMLPage1.html '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid.'');
 
 
@@ -326,7 +326,7 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
 
 
     public function send_to_moss($assignment,$cm){
-      global $OUTPUT, $DB, $USER, $CFG;
+      global $OUTPUT, $DB, $USER, $CFG ,$SET;
        $cmid = $cm->id;
        $userid = "370143826"; // Enter your MOSS userid
        $moss = new MOSS($userid);
@@ -345,7 +345,7 @@ class plagiarism_plugin_moss extends plagiarism_plugin {
 
        $readFile=explode('/',$website)[5];
        $numberFile=explode('/',$website)[4];
-      shell_exec('/usr/local/bin/wget --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -P '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid. ' '.$website.'');
+      shell_exec($SET->wget.' --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -P '.$CFG->dataroot.'/temp/plagiarism_moss/'.$cmid. ' '.$website.'');
       $content = file_get_contents($CFG->dataroot.'/temp/plagiarism_moss'.'/'.$cmid.'/'.'moss.stanford.edu/results/'.$numberFile.'/'.$readFile.'.html');
       $content1=$content;
 
